@@ -17,8 +17,7 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 //Database connection
-const connectString =
-  "mongodb+srv://41s184:RayaRaya1999@rayacluster.17yhr.mongodb.net/RAYADB?retryWrites=true&w=majority&appName=RAYACluster";
+const connectString = `mongodb+srv://${ENV.DB_USER}:${ENV.DB_PASSWORD}@${ENV.DB_CLUSTER}/${ENV.DB_NAME}?retryWrites=true&w=majority&appName=${ENV.DB_APP_NAME}}`;
 mongoose.connect(connectString, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
@@ -619,6 +618,8 @@ app.delete("/deleteCart/:cartId", async (req, res) => {
     res.status(500).send("Server error");
   }
 });
-app.listen(3001, () => {
-  console.log("You are connected");
+const port = ENV.PORT || 3001;
+
+app.listen(port, () => {
+  console.log(`You are connected at port: ${port}`);
 });

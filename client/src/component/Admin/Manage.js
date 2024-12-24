@@ -9,7 +9,7 @@ import {
 import { FaSave, FaEdit, FaTrash } from "react-icons/fa";
 import "./Manage.css";
 import axios from "axios";
-
+import * as ENV from "../../config.js";
 const Manage = () => {
   const { id } = useParams();
   const [userName, setUserName] = useState("");
@@ -25,7 +25,7 @@ const Manage = () => {
 
   const user = useSelector((state) => state.users.user);
   const allUsers = useSelector((state) => state.manageUsers.allUsers);
-  const picURL = "http://localhost:3001/" + "uploads/";
+  const picURL = `${ENV.SERVER_URL}` + "uploads/";
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -59,7 +59,7 @@ const Manage = () => {
 
       try {
         const picResponse = await axios.post(
-          "http://localhost:3001/uploadProfilePic",
+          `${ENV.SERVER_URL}/uploadProfilePic`,
           formData
         );
         updatedUser.profilePic = picResponse.data.profilePic;
@@ -110,7 +110,7 @@ const Manage = () => {
 
   const getUser = async () => {
     try {
-      const response = await axios.get(`http://localhost:3001/getUser/${id}`);
+      const response = await axios.get(`${ENV.SERVER_URL}/getUser/${id}`);
       const user = response.data.user;
       setUserName(user.name);
       setPwd(user.password);

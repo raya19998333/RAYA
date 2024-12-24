@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { Container, Table } from "reactstrap";
 import { useParams } from "react-router-dom"; // استيراد useParams لاستخراج الـ orderId من الـ URL
-
+import * as ENV from "../config.js";
 const Order = () => {
   const { orderId } = useParams(); // استخراج orderId من الـ URL
   const [order, setOrder] = useState(null); // حالة لتخزين بيانات الطلب
@@ -12,7 +12,7 @@ const Order = () => {
     if (orderId) {
       // جلب تفاصيل الطلب بناءً على orderId من الخادم
       axios
-        .get(`http://localhost:3001/checkout/${orderId}`) // API لجلب تفاصيل الطلب
+        .get(`${ENV.SERVER_URL}/checkout/${orderId}`) // API لجلب تفاصيل الطلب
         .then((response) => {
           setOrder(response.data.order); // تعيين بيانات الطلب في الحالة
           setLoading(false); // بعد استلام البيانات، تغيير حالة التحميل إلى false

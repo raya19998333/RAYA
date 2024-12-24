@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
-
+import * as ENV from "../config";
 const initialState = {
   allProducts: [],
   status: "",
@@ -11,7 +11,7 @@ export const addProduct = createAsyncThunk(
   async (productData) => {
     try {
       //sends a POST request to the server along the request body object
-      const response = await axios.post("http://localhost:3001/addProduct", {
+      const response = await axios.post(`${ENV.SERVER_URL}/addProduct`, {
         pcode: productData.pcode,
         desc: productData.desc,
         price: productData.price,
@@ -31,7 +31,7 @@ export const getProducts = createAsyncThunk(
   "manageProduct/getProducts",
   async () => {
     try {
-      const response = await axios.get("http://localhost:3001/getProducts");
+      const response = await axios.get(`${ENV.SERVER_URL}/getProducts`);
       return response.data.products;
       //console.log(response);
     } catch (error) {
@@ -45,7 +45,7 @@ export const deleteProduct = createAsyncThunk(
   async (id) => {
     try {
       const response = await axios.delete(
-        `http://localhost:3001/deleteProduct/${id}`
+        `${ENV.SERVER_URL}/deleteProduct/${id}`
       );
       return id;
     } catch (error) {
@@ -60,7 +60,7 @@ export const updateProduct = createAsyncThunk(
     try {
       //sends a POST request to the server along the request body object
       const response = await axios.put(
-        `http://localhost:3001/updateProduct/${prod_id}`, // Ensure SERVER_URL is correct
+        `${ENV.SERVER_URL}/updateProduct/${prod_id}`, // Ensure SERVER_URL is correct
         {
           pcode: productData.pcode,
           desc: productData.desc,

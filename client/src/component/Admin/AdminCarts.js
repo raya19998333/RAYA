@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { getAllCarts } from "../../Features/CartSlice";
 import axios from "axios";
 import "./AdminCartDashboard.css";
+import * as ENV from "../../config";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faTrash,
@@ -39,7 +40,7 @@ const AdminCartDashboard = () => {
       const userEmailsMap = {};
       for (let cart of carts) {
         const response = await axios.get(
-          `http://localhost:3001/getUserEmail/${cart.userId}`
+          `${ENV.SERVER_URL}/getUserEmail/${cart.userId}`
         );
         userEmailsMap[cart.userId] = response.data.email;
       }
@@ -67,7 +68,7 @@ const AdminCartDashboard = () => {
   const handleConfirmDelete = async () => {
     try {
       const response = await axios.delete(
-        `http://localhost:3001/deleteCart/${cartIdToDelete}`
+        `${ENV.SERVER_URL}/deleteCart/${cartIdToDelete}`
       );
 
       if (response.status === 200) {
@@ -78,7 +79,6 @@ const AdminCartDashboard = () => {
       }
     } catch (error) {
       console.error("Error deleting cart:", error);
-      setModalMessage("Error deleting cart");
     }
   };
 
@@ -124,7 +124,7 @@ const AdminCartDashboard = () => {
                 </p>
                 <p>
                   <FontAwesomeIcon icon={faTag} /> <strong>Total Price:</strong>{" "}
-                  {cart.totalPrice} USD
+                  {cart.totalPrice} OMR
                 </p>
                 <p>
                   <FontAwesomeIcon icon={faCalendarAlt} />{" "}

@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-
+import * as ENV from "../../config";
 //import * as ENV from "../config";
 const ManageProfile = () => {
   // const user = useSelector((state) => state.users.user); //from Redux Store
@@ -16,7 +16,7 @@ const ManageProfile = () => {
 
   const getUser = async () => {
     try {
-      const response = await axios.get(`http://localhost:3001/getUser/${id}`);
+      const response = await axios.get(`${ENV.SERVER_URL}/getUser/${id}`);
       const user = response.data.user;
       //console.log(user);
       setUserName(user.name);

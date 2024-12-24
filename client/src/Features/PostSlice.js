@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
-
+import * as ENV from "../config";
 const initialState = {
   posts: [],
   comments: [],
@@ -9,7 +9,7 @@ const initialState = {
 
 export const savePost = createAsyncThunk("posts/savePost", async (postData) => {
   try {
-    const response = await axios.post("http://localhost:3001/savePost", {
+    const response = await axios.post(`${ENV.SERVER_URL}/savePost`, {
       postMsg: postData.postMsg,
       category: postData.category,
       email: postData.email,
@@ -24,7 +24,7 @@ export const savePost = createAsyncThunk("posts/savePost", async (postData) => {
 });
 export const getPosts = createAsyncThunk("post/getPosts", async () => {
   try {
-    const response = await axios.get("http://localhost:3001/getPosts");
+    const response = await axios.get(`${ENV.SERVER_URL}/getPosts`);
     return response.data.posts;
     console.log(response);
   } catch (error) {
@@ -37,7 +37,7 @@ export const deletePost = createAsyncThunk(
     // إرسال البريد الإلكتروني مع الـ postId
     try {
       const response = await axios.delete(
-        `http://localhost:3001/deletePost/${postId}`,
+        `${ENV.SERVER_URL}/deletePost/${postId}`,
         {
           data: { email }, // إرسال البريد الإلكتروني في body
         }

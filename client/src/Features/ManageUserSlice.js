@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
-
+import * as ENV from "../config";
 const initialState = {
   allUsers: [], // Array to store user data
   status: "idle", // Status of the async operation: 'idle', 'loading', 'succeeded', 'failed'
@@ -8,7 +8,7 @@ const initialState = {
 };
 export const getUsers = createAsyncThunk("user/getUsers", async () => {
   try {
-    const response = await axios.get("http://localhost:3001/getUsers");
+    const response = await axios.get(`${ENV.SERVER_URL}/getUsers`);
     return response.data.users;
     //console.log(response);
   } catch (error) {
@@ -20,9 +20,7 @@ export const deleteUser = createAsyncThunk(
   async (id) => {
     try {
       // Use backticks (`) for template literals
-      const response = await axios.delete(
-        `http://localhost:3001/deleteUser/${id}`
-      );
+      const response = await axios.delete(`${ENV.SERVER_URL}/deleteUser/${id}`);
 
       // Optionally return the id if you need it in the reducer
       return id;
@@ -36,7 +34,7 @@ export const updateUser = createAsyncThunk(
   async (userData) => {
     try {
       const response = await axios.put(
-        `http://localhost:3001/updateUserProfile/${userData.email}`,
+        `${ENV.SERVER_URL}/updateUserProfile/${userData.email}`,
         userData
       );
       console.log("API Response: ", response.data); // طباعة الاستجابة

@@ -1,10 +1,11 @@
 import placeholderImage from "./Photos/logo.png"; // صورة افتراضية عند غياب صورة المستخدم
 import { useSelector } from "react-redux";
 import user from "./Photos/logo.png";
+import * as ENV from "../config";
 const User = (userData) => {
   const user = useSelector((state) => state.users.user);
 
-  const picURL = "http://localhost:3001/uploads/" + user.profilePic;
+  const picURL = `${ENV.SERVER_URL}/uploads/` + user.profilePic;
 
   // استخراج التاريخ فقط من birthday
   const formattedBirthday = user.birthday

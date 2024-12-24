@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
-
+import * as ENV from "../config.js";
 const initialState = {
   carts: [],
 
@@ -21,7 +21,7 @@ export const getAllCarts = createAsyncThunk(
   "manageCart/getAllCarts",
   async () => {
     try {
-      const response = await axios.get("http://localhost:3001/getAllCarts");
+      const response = await axios.get(`${ENV.SERVER_URL}/getAllCarts`);
       return response.data;
     } catch (error) {
       console.error("Error fetching carts:", error);
@@ -33,7 +33,7 @@ export const checkout = createAsyncThunk(
   "manageCart/checkout",
   async (userId) => {
     try {
-      const response = await axios.post("http://localhost:3001/checkout", {
+      const response = await axios.post(`${ENV.SERVER_URL}/checkout`, {
         userId,
       });
       return response.data.order;
@@ -49,7 +49,7 @@ export const addToCart = createAsyncThunk(
     try {
       console.log(cartData);
       //sends a POST request to the server along the request body object
-      const response = await axios.post("http://localhost:3001/addToCart", {
+      const response = await axios.post(`${ENV.SERVER_URL}/addToCart`, {
         userId: cartData.userId,
         productId: cartData.productId,
         quantity: cartData.quantity,
@@ -67,9 +67,7 @@ export const getCart = createAsyncThunk(
   "manageCart/getCart",
   async (userId) => {
     try {
-      const response = await axios.get(
-        `http://localhost:3001/getCart/${userId}`
-      );
+      const response = await axios.get(`${ENV.SERVER_URL}/getCart/${userId}`);
       console.log(response.data);
 
       return response.data.cart;
@@ -84,7 +82,7 @@ export const deleteCartItem = createAsyncThunk(
   async (id) => {
     try {
       const response = await axios.delete(
-        `http://localhost:3001/deleteCartItem/${id}`
+        `${ENV.SERVER_URL}/deleteCartItem/${id}`
       );
       return id;
     } catch (error) {
@@ -99,7 +97,7 @@ export const updateProduct = createAsyncThunk(
     try {
       //sends a POST request to the server along the request body object
       const response = await axios.put(
-        "http://localhost:3001/updateProduct/", // Ensure SERVER_URL is correct
+        `${ENV.SERVER_URL}/updateProduct/`, // Ensure SERVER_URL is correct
         {
           productId: cartData._id,
           pcode: cartData.pcode,
