@@ -3,7 +3,7 @@ import { Container, Row, Col } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Header from "./component/Header";
 import Home from "./component/Home";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom"; // Use BrowserRouter instead of Router
+import { HashRouter as Router, Route, Routes } from "react-router-dom"; // Use BrowserRouter instead of Router
 import Products from "./component/Products";
 import About from "./component/About";
 import Footer from "./component/Footer";
