@@ -37,7 +37,6 @@ function App() {
             <Route path="/Liptint" element={<Liptint />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/order/:orderId" element={<Order />} />
-            <Route path="*" element={<div>Page Not Found</div>} />
           </Routes>
         </Container>
       </Router>
