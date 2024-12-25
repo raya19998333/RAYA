@@ -90,7 +90,7 @@ const Login = () => {
             <a href="/forgot-password">Forgot your password?</a>
           </p>
           <p className="create-account">
-            New user? <a href="/register">Create account</a>
+            New user? <a href="/registerUser">Create account</a>
           </p>
         </Col>
 
