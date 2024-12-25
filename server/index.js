@@ -13,9 +13,22 @@ import * as ENV from "./config.js";
 import ProductModel from "./Models/ProductModel.js";
 import CartModel from "./Models/CartModel.js";
 import OrderModel from "./Models/OrderModel.js";
-const app = express();
+import cookieParser from "cookie-parser";
+
+//Middleware
+const app = express(); // تعريف `app` أولاً
+
+const corsOptions = {
+  origin: ENV.CLIENT_URL, //client URL local
+  methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+  credentials: true, // Enable credentials (cookies, authorization headers, etc.)
+};
+
+// استخدام middleware بعد تعريف `app`
+app.use(cors(corsOptions));
 app.use(express.json());
-app.use(cors());
+app.use(cookieParser());
+
 //Database connection
 const connectString = `mongodb+srv://${ENV.DB_USER}:${ENV.DB_PASSWORD}@${ENV.DB_CLUSTER}/${ENV.DB_NAME}?retryWrites=true&w=majority&appName=${ENV.DB_APP_NAME}`;
 mongoose.connect(connectString, {
