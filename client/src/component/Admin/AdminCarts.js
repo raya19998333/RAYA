@@ -129,8 +129,13 @@ const AdminCartDashboard = () => {
                 <p>
                   <FontAwesomeIcon icon={faCalendarAlt} />{" "}
                   <strong>Created At:</strong>{" "}
-                  {new Date(cart.createdAt).toLocaleDateString()}
+                  {new Date(cart.createdAt).toLocaleDateString("en-US", {
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric",
+                  })}
                 </p>
+
                 <p>
                   <strong>User ID:</strong> {cart.userId}{" "}
                   {/* عرض ID المستخدم */}
