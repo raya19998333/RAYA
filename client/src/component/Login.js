@@ -62,7 +62,7 @@ const Login = () => {
             Welcome Back! Please enter your credentials to access your account.
           </p>
 
-          <Form onSubmit={handleLogin}>
+          <Form>
             <FormGroup>
               <Label for="email">Enter Your Email</Label>
               <Input
@@ -83,7 +83,11 @@ const Login = () => {
                 required
               />
             </FormGroup>
-            <Button type="submit" color="dark" className="login-btn">
+            <Button
+              onClick={(e) => handleLogin(e)} // تمرير الحدث بشكل صحيح
+              color="dark"
+              className="login-btn"
+            >
               Login Now
             </Button>
           </Form>
