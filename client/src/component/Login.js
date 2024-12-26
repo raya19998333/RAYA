@@ -14,7 +14,7 @@ import img from "../component/Photos/image 1.png";
 import { useDispatch } from "react-redux";
 import { login } from "../Features/UserSlice";
 import { useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const Login = () => {
   const [email, setemail] = useState("");
@@ -90,7 +90,7 @@ const Login = () => {
             <a href="/forgot-password">Forgot your password?</a>
           </p>
           <p className="create-account">
-            New user? <a href="/registerUser">Create account</a>
+            New user? <Link to="/registerUser">Create account</Link>
           </p>
         </Col>
 
