@@ -45,7 +45,6 @@ const Login = () => {
         navigate("/");
       } else {
         navigate("/Manage"); // إذا كان المستخدم من النوع الإداري
-        navigate("/posts"); // يتم التنقل إلى صفحة البوستات
       }
     }
   }, [user, isError, isSuccess, navigate]);
