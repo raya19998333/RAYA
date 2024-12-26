@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Navbar,
   NavbarToggler,
@@ -9,7 +9,12 @@ import {
   Nav,
   NavItem,
   Button,
+  Modal,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
 } from "reactstrap";
+import { getCart } from "../Features/CartSlice";
 import { logout } from "../Features/UserSlice";
 import {
   FaHome,
@@ -31,9 +36,12 @@ import { useNavigate } from "react-router-dom";
 import { faComments } from "@fortawesome/free-solid-svg-icons";
 
 function Header() {
-  const user = useSelector((state) => state.users.user);
+  const user = useSelector((state) => state.users.user) || {};
+  const cart = useSelector((state) => state.cart);
   const [offcanvasOpen, setOffcanvasOpen] = useState(false);
+  const [logoutModal, setLogoutModal] = useState(false);
   const toggleOffcanvas = () => setOffcanvasOpen(!offcanvasOpen);
+  const toggleLogoutModal = () => setLogoutModal(!logoutModal);
   const location = useLocation();
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -43,6 +51,14 @@ function Header() {
     await new Promise((resolve) => setTimeout(resolve, 100));
     navigate("/login");
   };
+
+  useEffect(() => {
+    if (!user.email) {
+      navigate("/login");
+    } else {
+      dispatch(getCart(user._id));
+    }
+  }, [user, navigate, dispatch]);
 
   return (
     <div>
@@ -58,7 +74,7 @@ function Header() {
           boxShadow: "0 2px 5px rgba(0, 0, 0, 0.1)",
         }}
       >
-        <NavbarBrand href="/" className="me-auto">
+        <NavbarBrand tag={Link} to="/" className="me-auto">
           <img src={Logo} alt="Logo" className="logo-img" />
         </NavbarBrand>
         <NavbarToggler onClick={toggleOffcanvas} className="me-2" />
@@ -84,45 +100,40 @@ function Header() {
               </Link>
             </NavItem>
             {user?.userType === "admin" && (
-              <NavItem
-                className={`nav-item ${
-                  location.pathname === "/Manage" ? "active" : ""
-                }`}
-              >
-                <Link to="/Manage" className="nav-link">
-                  <FaUsersCog className="me-2" /> Manage Users
-                </Link>
-              </NavItem>
-            )}
-            {user.userType === "admin" && (
-              <NavItem
-                className={`nav-item ${
-                  location.pathname === "/posts" ? "active" : ""
-                }`}
-              >
-                <Link to="/posts" className="nav-link">
-                  <FaCommentDots className="me-2" /> Customer Reviews
-                </Link>
-              </NavItem>
-            )}{" "}
-            {user.userType === "admin" && (
-              <NavItem
-                className={`nav-item ${
-                  location.pathname === "/allcarts" ? "active" : ""
-                }`}
-              >
-                <Link to="/allcarts" className="nav-link">
-                  <FaShoppingCart className="me-2" /> Carts
-                </Link>
-              </NavItem>
-            )}
-            {user.userType === "admin" && (
-              <NavItem className="nav-item">
-                <Link to="/managep" className="nav-link">
-                  <FaPaintBrush className="me-2" />
-                  Manage Products
-                </Link>
-              </NavItem>
+              <>
+                <NavItem
+                  className={`nav-item ${
+                    location.pathname === "/Manage" ? "active" : ""
+                  }`}
+                >
+                  <Link to="/Manage" className="nav-link">
+                    <FaUsersCog className="me-2" /> Manage Users
+                  </Link>
+                </NavItem>
+                <NavItem
+                  className={`nav-item ${
+                    location.pathname === "/posts" ? "active" : ""
+                  }`}
+                >
+                  <Link to="/posts" className="nav-link">
+                    <FaCommentDots className="me-2" /> Customer Reviews
+                  </Link>
+                </NavItem>
+                <NavItem
+                  className={`nav-item ${
+                    location.pathname === "/allcarts" ? "active" : ""
+                  }`}
+                >
+                  <Link to="/allcarts" className="nav-link">
+                    <FaShoppingCart className="me-2" /> Carts {cart.count}
+                  </Link>
+                </NavItem>
+                <NavItem className="nav-item">
+                  <Link to="/managep" className="nav-link">
+                    <FaPaintBrush className="me-2" /> Manage Products
+                  </Link>
+                </NavItem>
+              </>
             )}
             <NavItem
               className={`nav-item ${
@@ -172,7 +183,7 @@ function Header() {
             </NavItem>
             <NavItem className="nav-item">
               <Button
-                onClick={handleLogout}
+                onClick={toggleLogoutModal}
                 color="dark"
                 className="logout-button w-100 text-start"
                 style={{
@@ -187,6 +198,29 @@ function Header() {
           </Nav>
         </OffcanvasBody>
       </Offcanvas>
+
+      <Modal isOpen={logoutModal} toggle={toggleLogoutModal} centered>
+        <ModalHeader
+          toggle={toggleLogoutModal}
+          style={{
+            backgroundColor: "#000",
+            color: "#fff",
+          }}
+        >
+          Confirm Logout
+        </ModalHeader>
+        <ModalBody style={{ textAlign: "center", color: "#000" }}>
+          Are you sure you want to log out?
+        </ModalBody>
+        <ModalFooter>
+          <Button color="secondary" onClick={toggleLogoutModal}>
+            Cancel
+          </Button>
+          <Button color="dark" onClick={handleLogout}>
+            Log Out
+          </Button>
+        </ModalFooter>
+      </Modal>
     </div>
   );
 }
