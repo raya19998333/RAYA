@@ -38,10 +38,11 @@ const Login = () => {
 
   useEffect(() => {
     if (isError) {
-      navigate("/login"); // العودة إلى الصفحة الرئيسية إذا كان هناك خطأ
-    } else if (isSuccess && user) {
-      if (user.userType === "user") {
-        navigate("/"); // إذا كان المستخدم عاديًا، توجه إلى الصفحة الرئيسية
+      navigate("/login");
+    } else if (isSuccess) {
+      if (user && user.userType === "user") {
+        console.log("test");
+        navigate("/");
       } else {
         navigate("/Manage"); // إذا كان المستخدم من النوع الإداري
         navigate("/posts"); // يتم التنقل إلى صفحة البوستات
