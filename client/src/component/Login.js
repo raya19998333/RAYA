@@ -38,7 +38,7 @@ const Login = () => {
 
   useEffect(() => {
     if (isError) {
-      navigate("/"); // العودة إلى الصفحة الرئيسية إذا كان هناك خطأ
+      navigate("/login"); // العودة إلى الصفحة الرئيسية إذا كان هناك خطأ
     } else if (isSuccess && user) {
       if (user.userType === "user") {
         navigate("/"); // إذا كان المستخدم عاديًا، توجه إلى الصفحة الرئيسية
