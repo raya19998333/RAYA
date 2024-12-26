@@ -89,7 +89,7 @@ const Register = () => {
       // Redirect to login page after success
       setTimeout(() => {
         setModal(false); // Close modal after 3 seconds
-        navigate("/login");
+        navigate("/");
       }, 3000);
     } catch (error) {
       // Set error message
