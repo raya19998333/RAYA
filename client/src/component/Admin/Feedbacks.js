@@ -8,7 +8,7 @@ const AdminPostsTable = () => {
   const posts = useSelector((state) => state.posts.posts);
   const postStatus = useSelector((state) => state.posts.status); // Get delete status
 
-  const [setShowAlert] = useState(false); // State for showing alerts
+  const [showAlert, setShowAlert] = useState(false); // State for showing alerts
 
   useEffect(() => {
     if (postStatus === "succeeded") {

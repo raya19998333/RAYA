@@ -1,6 +1,4 @@
-import placeholderImage from "./Photos/logo.png"; // صورة افتراضية عند غياب صورة المستخدم
 import { useSelector } from "react-redux";
-import user from "./Photos/logo.png";
 import * as ENV from "../config";
 const User = (userData) => {
   const user = useSelector((state) => state.users.user);
@@ -32,7 +30,6 @@ const User = (userData) => {
       age--;
     }
     return age;
-    const user = userData.userData;
   };
 
   const userAge = user.birthday ? calculateAge(user.birthday) : "Not provided";
@@ -40,7 +37,7 @@ const User = (userData) => {
   return (
     <div className="user-card">
       <div className="user-image-container">
-        <img src={picURL} className="user-image-o" />
+        <img src={picURL} className="user-image-o" alt="Share your face" />
       </div>
       <div className="user-info">
         <h4 className="user-name">{user.name}</h4>
