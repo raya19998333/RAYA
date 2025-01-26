@@ -21,6 +21,7 @@ import {
   FaTrashAlt,
   FaShoppingBag,
   FaShoppingCart,
+  FaCheckCircle,
   FaBoxOpen,
   FaDollarSign,
 } from "react-icons/fa";
@@ -31,13 +32,13 @@ const Cart = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const [setMessage] = useState(null);
-  const [setMessageType] = useState("");
-  const [setModalOpen] = useState(false);
+  const [message, setMessage] = useState(null);
+  const [messageType, setMessageType] = useState("");
+  const [modalOpen, setModalOpen] = useState(false);
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [itemToDelete, setItemToDelete] = useState(null);
   const [selectedItems, setSelectedItems] = useState([]);
-  const [setIsCheckoutCompleted] = useState(false);
+  const [isCheckoutCompleted, setIsCheckoutCompleted] = useState(false);
 
   const getTotalPrice = () => {
     return cart.items
@@ -82,6 +83,13 @@ const Cart = () => {
         setModalOpen(true);
         setIsCheckoutCompleted(false);
       });
+  };
+
+  const toggleModal = () => {
+    setModalOpen(!modalOpen);
+    if (isCheckoutCompleted) {
+      navigate("/products");
+    }
   };
 
   const handleSelectItem = (id) => {
