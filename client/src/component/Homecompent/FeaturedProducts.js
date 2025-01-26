@@ -4,15 +4,26 @@ import { getProducts } from "../../Features/ProductSlice";
 
 const FeaturedProducts = () => {
   const products = useSelector((state) => state.products.allProducts); // Fetch products dynamically
+  const loading = useSelector((state) => state.products.loading); // Check if loading
   const dispatch = useDispatch();
 
-  // Display the first three products dynamically only if products are available
-  const featuredProducts =
-    products && products.length ? products.slice(0, 3) : [];
-
   useEffect(() => {
-    dispatch(getProducts());
-  }, [dispatch]);
+    if (!products.length) {
+      dispatch(getProducts());
+    }
+  }, [dispatch, products]);
+
+  if (loading) {
+    return <div>Loading...</div>; // You can replace this with a loading spinner or some UI feedback
+  }
+
+  // Display the first three products dynamically without using slice
+  const featuredProducts = [];
+  for (let i = 0; i < 3; i++) {
+    if (products[i]) {
+      featuredProducts.push(products[i]);
+    }
+  }
 
   return (
     <section className="featured-products">
