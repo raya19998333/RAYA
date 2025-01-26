@@ -1,4 +1,3 @@
-// FeaturedProducts.js
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getProducts } from "../../Features/ProductSlice";
@@ -6,8 +5,11 @@ import { getProducts } from "../../Features/ProductSlice";
 const FeaturedProducts = () => {
   const products = useSelector((state) => state.products.allProducts); // Fetch products dynamically
   const dispatch = useDispatch();
-  // Display the first three products dynamically
-  const featuredProducts = products.slice(0, 3);
+
+  // Display the first three products dynamically only if products are available
+  const featuredProducts =
+    products && products.length ? products.slice(0, 3) : [];
+
   useEffect(() => {
     dispatch(getProducts());
   }, [dispatch]);
