@@ -1,9 +1,7 @@
 import { configureStore } from "@reduxjs/toolkit";
 import usersReducer from "../Features/UserSlice";
 import postsReducer from "../Features/PostSlice";
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { persistStore, persistReducer } from "redux-persist";
-import axios from "axios";
 import manageUserReducer from "../Features/ManageUserSlice";
 import { reset as resetManageUser } from "../Features/ManageUserSlice";
 import { reset as resetUsers } from "../Features/UserSlice";

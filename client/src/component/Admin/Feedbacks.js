@@ -1,15 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
-import { Container, Table, Alert } from "reactstrap";
+import { Container, Table } from "reactstrap";
 import moment from "moment";
 import "../../App.css";
 
 const AdminPostsTable = () => {
   const posts = useSelector((state) => state.posts.posts);
   const postStatus = useSelector((state) => state.posts.status); // Get delete status
-  const postError = useSelector((state) => state.posts.error); // Get error in case it happens
 
-  const [showAlert, setShowAlert] = useState(false); // State for showing alerts
+  const [setShowAlert] = useState(false); // State for showing alerts
 
   useEffect(() => {
     if (postStatus === "succeeded") {

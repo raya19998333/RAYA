@@ -1,5 +1,4 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { UsersData } from "../ExampleData";
 import axios from "axios";
 import * as ENV from "../config";
 const initialState = {
@@ -49,13 +48,26 @@ export const login = createAsyncThunk("users/login", async (userData) => {
     throw new Error(errorMessage);
   }
 });
-export const logout = createAsyncThunk("/users/logout", async () => {
-  try {
-    // Send a request to your server to log the user out
+export const logout = createAsyncThunk(
+  "/users/logout",
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await axios.post(`${ENV.SERVER_URL}/logout`);
 
-    const response = await axios.post(`${ENV.SERVER_URL}/logout`);
-  } catch (error) {}
-});
+      if (response.status === 200) {
+        return response.data; // إرجاع بيانات الاستجابة عند النجاح (إن وجدت)
+      } else {
+        return rejectWithValue("Failed to logout"); // إرجاع رسالة خطأ إذا لم تكن الاستجابة 200
+      }
+    } catch (error) {
+      console.error("Error logging out", error);
+      // إرجاع تفاصيل الخطأ
+      return rejectWithValue(
+        error.response ? error.response.data : error.message
+      );
+    }
+  }
+);
 
 export const updateUserProfile = createAsyncThunk(
   "user/updateUserProfile", // Action type string for Redux

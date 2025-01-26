@@ -1,5 +1,5 @@
 import "./App.css";
-import { Container, Row, Col } from "react-bootstrap";
+import { Container, Row } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Header from "./component/Header";
 import Home from "./component/Home";
@@ -16,8 +16,6 @@ import { useSelector } from "react-redux";
 import Cart from "./component/Cart";
 import SharePost from "./component/SharePost";
 import Manage from "./component/Admin/Manage";
-import ManageProfile from "./component/Admin/ManageProfile";
-import DisplayPosts from "./component/Posts";
 import AdminPostsTable from "./component/Admin/Feedbacks";
 import ManageProducts from "./component/Admin/ManageProducts";
 import UpdateProduct from "./component/Admin/UpdateProduct";

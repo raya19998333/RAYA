@@ -79,14 +79,22 @@ export const getCart = createAsyncThunk(
 
 export const deleteCartItem = createAsyncThunk(
   "manageCart/deleteCartItem",
-  async (id) => {
+  async (id, { rejectWithValue }) => {
     try {
       const response = await axios.delete(
         `${ENV.SERVER_URL}/deleteCartItem/${id}`
       );
-      return id;
+      if (response.status === 200) {
+        return id; // في حالة النجاح، نعيد الـ id
+      } else {
+        // إذا كانت الاستجابة ليست 200، نرجع الخطأ
+        return rejectWithValue("Failed to delete item");
+      }
     } catch (error) {
-      console.log(error);
+      // إذا حدث خطأ في الاتصال بالخادم، نرجع الخطأ مع تفاصيل إضافية
+      return rejectWithValue(
+        error.response ? error.response.data : error.message
+      );
     }
   }
 );

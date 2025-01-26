@@ -1,11 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 import * as ENV from "../config";
-const initialState = {
-  posts: [],
-  comments: [],
-  likes: [],
-};
 
 export const savePost = createAsyncThunk("posts/savePost", async (postData) => {
   try {
@@ -25,16 +20,15 @@ export const savePost = createAsyncThunk("posts/savePost", async (postData) => {
 export const getPosts = createAsyncThunk("post/getPosts", async () => {
   try {
     const response = await axios.get(`${ENV.SERVER_URL}/getPosts`);
-    return response.data.posts;
     console.log(response);
+    return response.data.posts;
   } catch (error) {
     console.log(error);
   }
 });
 export const deletePost = createAsyncThunk(
   "posts/deletePost",
-  async ({ postId, email }) => {
-    // إرسال البريد الإلكتروني مع الـ postId
+  async ({ postId, email }, { rejectWithValue }) => {
     try {
       const response = await axios.delete(
         `${ENV.SERVER_URL}/deletePost/${postId}`,
@@ -42,10 +36,18 @@ export const deletePost = createAsyncThunk(
           data: { email }, // إرسال البريد الإلكتروني في body
         }
       );
-      return postId;
+
+      if (response.status === 200) {
+        return postId; // في حالة النجاح، نعيد الـ postId
+      } else {
+        return rejectWithValue("Failed to delete the post");
+      }
     } catch (error) {
       console.log("Error deleting post", error);
-      throw new Error("Error deleting post");
+      // إرجاع تفاصيل الخطأ إذا كان هناك استثناء
+      return rejectWithValue(
+        error.response ? error.response.data : error.message
+      );
     }
   }
 );

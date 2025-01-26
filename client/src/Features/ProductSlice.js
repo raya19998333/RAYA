@@ -32,8 +32,8 @@ export const getProducts = createAsyncThunk(
   async () => {
     try {
       const response = await axios.get(`${ENV.SERVER_URL}/getProducts`);
+      console.log(response);
       return response.data.products;
-      //console.log(response);
     } catch (error) {
       console.log(error);
     }
@@ -42,14 +42,25 @@ export const getProducts = createAsyncThunk(
 
 export const deleteProduct = createAsyncThunk(
   "manageProduct/deleteProduct",
-  async (id) => {
+  async (id, { rejectWithValue }) => {
     try {
       const response = await axios.delete(
         `${ENV.SERVER_URL}/deleteProduct/${id}`
       );
-      return id;
+
+      // التحقق من حالة الاستجابة
+      if (response.status === 200) {
+        return id; // إرجاع الـ id في حالة النجاح
+      } else {
+        // إذا كانت الاستجابة ليست 200، نرجع رسالة فشل
+        return rejectWithValue("Failed to delete product");
+      }
     } catch (error) {
-      console.log(error);
+      console.error("Error deleting product", error);
+      // إرجاع تفاصيل الخطأ في حالة حدوث استثناء
+      return rejectWithValue(
+        error.response ? error.response.data : error.message
+      );
     }
   }
 );

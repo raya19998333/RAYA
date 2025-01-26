@@ -18,7 +18,7 @@ Modal.setAppElement("#root"); // لضمان عمل المودال بشكل صح�
 
 const AdminCartDashboard = () => {
   const dispatch = useDispatch();
-  const [userEmails, setUserEmails] = useState({});
+  const [setUserEmails] = useState({});
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [modalMessage, setModalMessage] = useState("");
   const [cartIdToDelete, setCartIdToDelete] = useState(null); // لحفظ السلة التي سيتم حذفها
