@@ -7,12 +7,17 @@ import {
   FormGroup,
   Input,
   Alert,
+  Modal,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
 } from "reactstrap";
+import { faThumbsUp } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCommentDots, faTags } from "@fortawesome/free-solid-svg-icons";
 import { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { savePost, getPosts } from "../Features/PostSlice";
+import { savePost } from "../Features/PostSlice";
 import { useNavigate } from "react-router-dom";
 import Logo from "./Photos/logo.png"; // Adjust the path if needed
 import DisplayPosts from "./Posts"; // Import the DisplayPosts component
@@ -21,6 +26,8 @@ const SharePosts = () => {
   const [postMsg, setPostMsg] = useState("");
   const [category, setCategory] = useState("");
   const [showAlert, setShowAlert] = useState(false);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [modalMessage, setModalMessage] = useState(""); // To hold the dynamic message for Modal
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -30,11 +37,13 @@ const SharePosts = () => {
 
   const handlePost = () => {
     if (!postMsg.trim()) {
-      alert("Please provide your feedback about the product.");
+      setModalMessage("Please provide your feedback about the product.");
+      setModalOpen(true);
       return;
     }
     if (!category) {
-      alert("Please select a product category.");
+      setModalMessage("Please select a product category.");
+      setModalOpen(true);
       return;
     }
 
@@ -50,6 +59,11 @@ const SharePosts = () => {
     setCategory("");
     setShowAlert(true);
     setTimeout(() => setShowAlert(false), 3000);
+  };
+
+  const handleModalClose = () => {
+    setModalOpen(false);
+    setModalMessage(""); // Reset the message
   };
 
   return (
@@ -188,13 +202,14 @@ const SharePosts = () => {
             color="dark"
             style={{
               width: "100%",
-              borderRadius: "50px",
               padding: "12px",
-              backgroundColor: "#333",
+              backgroundColor: "#000", // خلفية باللون الأسود
               color: "#fff",
+              borderRadius: "8px", // حواف مستديرة قليلاً
             }}
           >
-            Submit Feedback
+            <FontAwesomeIcon icon={faThumbsUp} style={{ marginRight: "8px" }} />
+            Share Your Opinion
           </Button>
         </Col>
 
@@ -203,6 +218,50 @@ const SharePosts = () => {
           <DisplayPosts />
         </Col>
       </Row>
+
+      {/* Modal for Feedback Alert */}
+      <Modal isOpen={modalOpen} toggle={handleModalClose} centered>
+        <ModalHeader
+          toggle={handleModalClose}
+          style={{
+            backgroundColor: "#fff",
+            color: "#333",
+            border: "none",
+            display: "flex",
+            alignItems: "center",
+            padding: "15px",
+            fontSize: "18px",
+          }}
+        >
+          <img
+            src={Logo} // تأكد من استبدال "Logo" بالرابط الصحيح للصورة
+            alt="Your Logo"
+            style={{ width: "40px", marginRight: "15px" }}
+          />
+          Success
+        </ModalHeader>
+
+        <ModalBody
+          style={{
+            textAlign: "center",
+            color: "#555",
+            fontSize: "18px",
+            padding: "20px",
+          }}
+        >
+          {modalMessage}
+        </ModalBody>
+
+        <ModalFooter style={{ justifyContent: "center", padding: "15px" }}>
+          <Button
+            color="secondary"
+            onClick={handleModalClose}
+            style={{ padding: "10px 20px", fontSize: "16px" }}
+          >
+            Cancel
+          </Button>
+        </ModalFooter>
+      </Modal>
     </Container>
   );
 };

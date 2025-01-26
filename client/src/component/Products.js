@@ -8,40 +8,40 @@ import {
   CardTitle,
   CardText,
   Button,
-  CardFooter,
-  Input,
   Modal,
   ModalHeader,
-  ModalBody,
   ModalFooter,
+  Input,
+  ModalBody,
 } from "reactstrap";
+import Logo from "../component/Photos/logo.png";
 import { useSelector, useDispatch } from "react-redux";
 import { addToCart } from "../Features/CartSlice";
 import { getProducts } from "../Features/ProductSlice";
 import { useNavigate } from "react-router-dom";
-import { FaShoppingCart } from "react-icons/fa"; // Importing icons
-import im from "./Photos/b1.jpg"; // Default import of the image
-
+import { FaShoppingCart } from "react-icons/fa";
+import im from "./Photos/b1.jpg";
+import c11 from "./Photos/c11.jpg";
 const Products = () => {
   const products = useSelector((state) => state.products.allProducts);
   const user = useSelector((state) => state.users.user);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const [quantities, setQuantities] = useState({}); // Object to store quantities for each product
-  const [modalOpen, setModalOpen] = useState(false); // State to control modal visibility
-  const [modalMessage, setModalMessage] = useState(""); // Message to display in the modal
+  const [quantities, setQuantities] = useState({});
+  const [modalOpen, setModalOpen] = useState(false);
+  const [modalMessage, setModalMessage] = useState("");
 
   const handleQuantityChange = (productId, value) => {
-    if (value < 1) return; // Prevent setting quantity to less than 1
-    setQuantities((prev) => ({
-      ...prev,
+    if (value < 1) return;
+    setQuantities((prevQuantities) => ({
+      ...prevQuantities,
       [productId]: value,
     }));
   };
 
   const handleAddToCart = (productId) => {
-    const quantity = quantities[productId] || 1; // Default quantity is 1 if not specified
+    const quantity = quantities[productId] || 1;
     if (!quantity) {
       alert("Quantity is required!");
     } else {
@@ -51,18 +51,18 @@ const Products = () => {
         quantity: quantity,
       };
       dispatch(addToCart(cartData));
-      setModalMessage("Item added to cart.");
-      setModalOpen(true); // Open the modal when item is added
+      setModalMessage("Item added to the cart successfully!");
+      setModalOpen(true);
     }
   };
 
   const handleModalClose = () => {
     setModalOpen(false);
-    navigate("/cart"); // Navigate to the cart page after closing the modal
+    navigate("/cart");
   };
 
   useEffect(() => {
-    if (!user?.email) {
+    if (!user?._id) {
       navigate("/login");
     } else {
       dispatch(getProducts());
@@ -70,154 +70,310 @@ const Products = () => {
   }, [user]);
 
   return (
-    <div className="products-container" style={{ padding: "40px" }}>
-      <Row>
-        <div className="beauty-collection-section text-center mb-5">
-          <div className="beauty-collection-image">
-            <img
-              src={im}
-              className="img-fluid"
-              alt="Raya Beauty Collection"
-              style={{
-                borderRadius: "10px",
-                width: "100%",
-                maxHeight: "400px",
-                objectFit: "cover",
-              }}
-            />
-          </div>
-          <div className="beauty-collection-content mt-4">
-            <h2
-              className="collection-title"
-              style={{ color: "#333", fontWeight: "bold", fontSize: "36px" }}
-            >
-              RAYA BEAUTY COLLECTION
-            </h2>
-            <p
-              className="collection-description"
-              style={{ color: "#555", fontSize: "16px" }}
-            >
-              Embrace your natural beauty with Raya Beauty!
-            </p>
-            <Button
-              color="dark"
-              style={{
-                backgroundColor: "#333",
-                border: "none",
-                padding: "10px 20px",
-                fontSize: "16px",
-              }}
-            >
-              BUY NOW
-            </Button>
-          </div>
-        </div>
+    <div className="products-container">
+      <Row
+        style={{
+          backgroundColor: "#000",
+          height: "80vh", // نصف ارتفاع الشاشة
+          overflow: "hidden",
+        }}
+      >
+        <img
+          src={c11}
+          className=""
+          alt="Raya Beauty Collection"
+          style={{
+            width: "100%",
+            height: "100%",
+            objectFit: "cover",
+            margin: "0",
+            padding: "0",
+          }}
+        />
       </Row>
 
       <Row>
+        <div className="beauty-collection-content mt-4">
+          <h2
+            className="collection-title"
+            style={{
+              color: "#333",
+              fontWeight: "bold",
+              fontSize: "36px",
+              marginBottom: "20px",
+            }}
+          >
+            RAYA BEAUTY COLLECTION
+          </h2>
+          <p
+            className="collection-description"
+            style={{ color: "#555", fontSize: "16px", margin: "20px 0" }}
+          >
+            Embrace your natural beauty with Raya Beauty!
+          </p>
+          <Button
+            color="dark"
+            style={{
+              backgroundColor: "#000",
+              border: "none",
+              padding: "12px 24px",
+              fontSize: "16px",
+
+              marginTop: "10px",
+            }}
+          >
+            BUY NOW
+          </Button>
+        </div>
+      </Row>
+
+      <Row style={{ padding: "0 20px", margin: "0 auto", maxWidth: "1200px" }}>
         {products.map((product) => (
-          <Col xs="12" sm="6" md="4" key={product._id} className="mb-4">
+          <Col
+            xs="12"
+            sm="6"
+            md="4"
+            key={product._id}
+            className="mb-4"
+            style={{ padding: "15px" }}
+          >
             <Card
               style={{
-                border: "none",
+                position: "relative",
+                backgroundColor: "#fff",
+                border: "1px solid #ddd",
                 borderRadius: "10px",
-                boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+                boxShadow: "0 4px 10px rgba(0, 0, 0, 0.1)",
+                overflow: "hidden",
+                transition: "transform 0.2s, box-shadow 0.2s",
               }}
             >
+              {product.stocks === 0 && (
+                <div
+                  style={{
+                    position: "absolute",
+                    top: "0",
+                    left: "0",
+                    width: "100%",
+                    backgroundColor: "rgba(255, 0, 0, 0.8)",
+                    color: "white",
+                    textAlign: "center",
+                    padding: "5px",
+                    fontWeight: "bold",
+                    zIndex: "1",
+                  }}
+                >
+                  SOLD OUT
+                </div>
+              )}
+
               <CardImg
                 top
-                width="100%"
-                src={product.image}
+                src={product.image || im}
                 alt={product.desc}
                 style={{
+                  height: "200px",
+                  width: "100%",
+                  objectFit: "cover",
                   borderTopLeftRadius: "10px",
                   borderTopRightRadius: "10px",
-                  height: "200px",
-                  objectFit: "cover",
                 }}
               />
-              <CardBody>
-                <CardTitle
-                  tag="h5"
-                  style={{
-                    color: "#333",
-                    fontWeight: "bold",
-                    fontSize: "18px",
-                  }}
-                >
-                  {product.desc}
-                </CardTitle>
-                <CardText
-                  style={{
-                    color: "#555",
-                    fontSize: "14px",
-                    marginBottom: "10px",
-                  }}
-                >
-                  {Math.round(product.price, 2)} OMR
-                </CardText>
-                <CardText
-                  style={{
-                    color: "#888",
-                    fontSize: "12px",
-                    marginBottom: "10px",
-                  }}
-                >
-                  <strong>In Stock:</strong> {product.stocks} units
-                </CardText>
-                <Input
-                  type="number"
-                  value={quantities[product._id] || 1}
-                  onChange={(e) =>
-                    handleQuantityChange(product._id, parseInt(e.target.value))
-                  }
-                  min="1"
-                  className="mb-3"
-                  placeholder="Quantity"
-                  style={{
-                    borderRadius: "5px",
-                    border: "1px solid #ddd",
-                    boxShadow: "none",
-                    fontSize: "14px",
-                    padding: "8px",
-                  }}
-                />
-              </CardBody>
-              <CardFooter
-                className="text-center"
-                style={{ backgroundColor: "#fff", borderTop: "none" }}
+
+              <CardBody
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "space-between",
+                  padding: "20px",
+                  height: "100%",
+                }}
               >
+                <div>
+                  <CardTitle
+                    tag="h5"
+                    style={{
+                      fontWeight: "bold",
+                      fontSize: "18px",
+                      color: "#000",
+                      marginBottom: "0",
+                    }}
+                  >
+                    {product.desc}
+                  </CardTitle>
+
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      marginBottom: "10px",
+                    }}
+                  >
+                    <CardText
+                      style={{
+                        fontSize: "22px",
+                        fontWeight: "600",
+                        color: "#333",
+                        textAlign: "center",
+                        fontFamily: "Arial, sans-serif",
+                      }}
+                    >
+                      {product.price.toFixed(2)} OMR
+                    </CardText>
+                  </div>
+
+                  <div
+                    style={{
+                      marginBottom: "10px",
+                      fontSize: "14px",
+                      color: "#555",
+                    }}
+                  >
+                    <strong>In Stock:</strong> {product.stocks} units
+                  </div>
+                </div>
+
+                {product.stocks > 0 && (
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      marginBottom: "15px",
+                    }}
+                  >
+                    <button
+                      onClick={() =>
+                        handleQuantityChange(
+                          product._id,
+                          (quantities[product._id] || 1) - 1
+                        )
+                      }
+                      disabled={(quantities[product._id] || 1) <= 1}
+                      style={{
+                        width: "30px",
+                        height: "30px",
+                        borderRadius: "50%",
+                        backgroundColor: "#ccc",
+                        border: "none",
+                        color: "#fff",
+                      }}
+                    >
+                      -
+                    </button>
+                    <Input
+                      type="number"
+                      value={quantities[product._id] || 1}
+                      onChange={(e) =>
+                        handleQuantityChange(
+                          product._id,
+                          parseInt(e.target.value) || 1
+                        )
+                      }
+                      min={1}
+                      max={product.stocks}
+                      style={{
+                        width: "50px",
+                        textAlign: "center",
+                        margin: "0 10px",
+                      }}
+                    />
+                    <button
+                      onClick={() =>
+                        handleQuantityChange(
+                          product._id,
+                          (quantities[product._id] || 1) + 1
+                        )
+                      }
+                      disabled={quantities[product._id] >= product.stocks}
+                      style={{
+                        width: "30px",
+                        height: "30px",
+                        borderRadius: "50%",
+                        backgroundColor: "#ccc",
+                        border: "none",
+                        color: "#fff",
+                      }}
+                    >
+                      +
+                    </button>
+                  </div>
+                )}
+
                 <Button
                   color="dark"
                   onClick={() => handleAddToCart(product._id)}
                   style={{
-                    borderRadius: "5px",
-                    width: "100%",
-                    fontWeight: "bold",
+                    fontSize: "16px",
                     backgroundColor: "#333",
-                    border: "none",
+                    borderColor: "#333",
+                    borderRadius: "5px",
+                    boxShadow: "none",
+                    color: "#fff",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    width: "100%",
                   }}
+                  disabled={product.stocks === 0}
                 >
-                  <FaShoppingCart style={{ marginRight: "8px" }} /> Add to Cart
+                  <FaShoppingCart style={{ marginRight: "5px" }} />
+                  Add to Cart
                 </Button>
-              </CardFooter>
+              </CardBody>
             </Card>
           </Col>
         ))}
       </Row>
 
-      {/* Modal for item added to cart */}
       <Modal isOpen={modalOpen} toggle={() => setModalOpen(false)} centered>
         <ModalHeader
           toggle={() => setModalOpen(false)}
-          className="bg-success text-white"
+          style={{
+            backgroundColor: "#fff",
+            color: "#333",
+            border: "none",
+            display: "flex",
+            alignItems: "center",
+            padding: "15px",
+            fontSize: "18px",
+          }}
         >
+          <img
+            src={Logo} // تأكد من استبدال "Logo" بالرابط الصحيح للصورة
+            alt="Your Logo"
+            style={{ width: "40px", marginRight: "15px" }}
+          />
           Success
         </ModalHeader>
-        <ModalBody>{modalMessage}</ModalBody>
-        <ModalFooter>
-          <Button color="primary" onClick={handleModalClose}>
-            OK
+
+        <ModalBody
+          style={{
+            textAlign: "center",
+            color: "#555",
+            fontSize: "18px",
+            padding: "20px",
+          }}
+        >
+          {modalMessage}
+        </ModalBody>
+
+        <ModalFooter style={{ justifyContent: "center", padding: "15px" }}>
+          <Button
+            color="secondary"
+            onClick={() => setModalOpen(false)}
+            style={{ padding: "10px 20px", fontSize: "16px" }}
+          >
+            Cancel
+          </Button>
+          <Button
+            color="success"
+            onClick={handleModalClose}
+            style={{ padding: "10px 20px", fontSize: "16px" }}
+          >
+            <i className="fas fa-cart-plus" style={{ marginRight: "8px" }}></i>
+            Go to Cart
           </Button>
         </ModalFooter>
       </Modal>

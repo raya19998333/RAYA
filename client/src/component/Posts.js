@@ -20,7 +20,9 @@ import {
   faTrashAlt,
   faExclamationTriangle,
 } from "@fortawesome/free-solid-svg-icons";
+import Logo from "./Photos/logo.png"; // تأكد من استيراد الشعار بشكل صحيح
 import "../App.css";
+
 const DisplayPosts = () => {
   const dispatch = useDispatch();
   const posts = useSelector((state) => state.posts.posts);
@@ -179,23 +181,26 @@ const DisplayPosts = () => {
         <ModalHeader
           toggle={toggleModal}
           style={{
-            backgroundColor: "#f8f8f8", // رمادي فاتح للعناوين
-            color: "#000", // نص أسود
-            borderRadius: "16px 16px 0 0",
+            backgroundColor: "#fff",
+            color: "#333",
+            border: "none",
+            display: "flex",
+            alignItems: "center",
+            padding: "15px",
+            fontSize: "18px",
           }}
         >
-          <FontAwesomeIcon
-            icon={faExclamationTriangle}
-            style={{ color: "#000", fontSize: "20px", marginRight: "10px" }}
+          <img
+            src={Logo} // تأكد من استبدال "Logo" بالرابط الصحيح للصورة
+            alt="Your Logo"
+            style={{ width: "40px", marginRight: "15px" }}
           />
-          <span style={{ fontSize: "18px", fontWeight: "bold" }}>
-            Delete Feedback
-          </span>
+          Delete Feedback
         </ModalHeader>
         <ModalBody
           style={{
             padding: "25px",
-            color: "#333", // أسود خافت
+            color: "#333",
             fontSize: "16px",
             lineHeight: "1.6",
             textAlign: "center",
@@ -205,7 +210,11 @@ const DisplayPosts = () => {
           <p style={{ marginBottom: "15px", fontWeight: "600", color: "#000" }}>
             <FontAwesomeIcon
               icon={faExclamationTriangle}
-              style={{ color: "#000", fontSize: "18px", marginRight: "8px" }}
+              style={{
+                color: "#f44336",
+                fontSize: "18px",
+                marginRight: "8px",
+              }}
             />
             Warning! Are you sure you want to delete this Feedback?
           </p>
@@ -215,14 +224,18 @@ const DisplayPosts = () => {
           </p>
         </ModalBody>
         <ModalFooter
-          style={{ backgroundColor: "#f8f8f8", borderRadius: "0 0 16px 16px" }}
+          style={{
+            justifyContent: "center",
+            padding: "15px",
+            backgroundColor: "#fff",
+          }}
         >
           <Button
             onClick={toggleModal}
             style={{
-              borderRadius: "20px",
-              backgroundColor: "#e0e0e0", // رمادي فاتح
-              color: "#000", // نص أسود
+              borderRadius: "5px",
+              backgroundColor: "#e0e0e0",
+              color: "#000",
               border: "1px solid #ccc",
               padding: "8px 16px",
             }}
@@ -232,15 +245,15 @@ const DisplayPosts = () => {
           <Button
             onClick={handleDelete}
             style={{
-              borderRadius: "20px",
+              borderRadius: "5px",
               backgroundColor: "#f44336",
-              color: "#fff", // نص أبيض
+              color: "#fff",
               padding: "8px 16px",
               marginLeft: "10px",
             }}
           >
             <FontAwesomeIcon icon={faTrashAlt} style={{ marginRight: "6px" }} />
-            Confirm Delete
+            Confirm
           </Button>
         </ModalFooter>
       </Modal>

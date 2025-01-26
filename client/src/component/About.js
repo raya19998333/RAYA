@@ -19,7 +19,7 @@ const About = () => {
       {/* About Us Section */}
       <Container>
         <Row className="my-5">
-          <Col md={6}>
+          <Col xs={12} md={6}>
             <h1>About Us</h1>
             <p>
               At Raya, we pride ourselves on being a premier Omani brand
@@ -36,7 +36,7 @@ const About = () => {
               of our lip gloss or tint is a guilt-free indulgence.
             </p>
           </Col>
-          <Col md={6}>
+          <Col xs={12} md={6}>
             <img
               src={logoImage}
               alt="Raya Logo"
@@ -47,7 +47,7 @@ const About = () => {
 
         {/* Product Showcase Section */}
         <Row>
-          <Col md={6}>
+          <Col xs={12} md={6}>
             <Card>
               <CardImg
                 top
@@ -55,9 +55,10 @@ const About = () => {
                 src={lipProduct1}
                 alt="Lip Product 1"
                 className="medium-card-img" // Custom class to make the image medium-sized
+                fluid
               />
               <CardBody>
-                <CardTitle tag="h5-1">Premium Lip Gloss</CardTitle>
+                <CardTitle tag="h5">Premium Lip Gloss</CardTitle>
                 <CardText>
                   Our lip gloss is designed to give you a smooth and glossy
                   finish, while nourishing your lips with cruelty-free
@@ -67,7 +68,7 @@ const About = () => {
             </Card>
           </Col>
 
-          <Col md={6}>
+          <Col xs={12} md={6}>
             <Card>
               <CardImg
                 top
@@ -75,9 +76,10 @@ const About = () => {
                 src={lipProduct2}
                 alt="Lip Product 2"
                 className="medium-card-img" // Custom class to make the image medium-sized
+                fluid
               />
               <CardBody>
-                <CardTitle tag="h5-1">Natural Lip Tint</CardTitle>
+                <CardTitle tag="h5">Natural Lip Tint</CardTitle>
                 <CardText>
                   Enhance your natural beauty with our lip tint that provides
                   long-lasting color while keeping your lips moisturized.

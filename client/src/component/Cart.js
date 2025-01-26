@@ -16,7 +16,15 @@ import { useSelector, useDispatch } from "react-redux";
 import { useEffect, useState } from "react";
 import { deleteCartItem, getCart, checkout } from "../Features/CartSlice";
 import { useNavigate } from "react-router-dom";
-import { FaTrashAlt, FaCreditCard, FaShoppingCart } from "react-icons/fa";
+import Logo from "../component/Photos/logo.png";
+import {
+  FaTrashAlt,
+  FaShoppingBag,
+  FaShoppingCart,
+  FaCheckCircle,
+  FaBoxOpen,
+  FaDollarSign,
+} from "react-icons/fa";
 
 const Cart = () => {
   const cart = useSelector((state) => state.cart.cart);
@@ -27,26 +35,42 @@ const Cart = () => {
   const [message, setMessage] = useState(null);
   const [messageType, setMessageType] = useState("");
   const [modalOpen, setModalOpen] = useState(false);
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [itemToDelete, setItemToDelete] = useState(null);
+  const [selectedItems, setSelectedItems] = useState([]);
   const [isCheckoutCompleted, setIsCheckoutCompleted] = useState(false);
 
+  const getTotalPrice = () => {
+    return cart.items
+      .filter((item) => selectedItems.includes(item._id))
+      .reduce((total, item) => total + item.price * item.quantity, 0);
+  };
+
   const handleDelete = (id) => {
-    if (window.confirm("Are you sure you want to delete this product?")) {
-      dispatch(deleteCartItem(id))
-        .then(() => {
-          setMessage("Product has been successfully deleted from your cart.");
-          setMessageType("success");
-          setModalOpen(true); // افتح المودال عند الحذف
-        })
-        .catch(() => {
-          setMessage("Error during deletion. Please try again.");
-          setMessageType("danger");
-          setModalOpen(true); // افتح المودال في حال فشل الحذف
-        });
-    }
+    setItemToDelete(id);
+    setDeleteModalOpen(true);
+  };
+
+  const confirmDelete = () => {
+    dispatch(deleteCartItem(itemToDelete))
+      .then(() => {
+        setMessage("Product has been successfully deleted from your cart.");
+        setMessageType("success");
+        setModalOpen(true);
+      })
+      .catch(() => {
+        setMessage("Error during deletion. Please try again.");
+        setMessageType("danger");
+        setModalOpen(true);
+      });
+    setDeleteModalOpen(false);
   };
 
   const handleCheckout = () => {
-    dispatch(checkout(user._id))
+    const productsToCheckout = cart.items.filter((item) =>
+      selectedItems.includes(item._id)
+    );
+    dispatch(checkout(user._id, productsToCheckout))
       .then(() => {
         setMessage("Checkout successful! Your order has been placed.");
         setMessageType("success");
@@ -66,6 +90,14 @@ const Cart = () => {
     if (isCheckoutCompleted) {
       navigate("/products");
     }
+  };
+
+  const handleSelectItem = (id) => {
+    setSelectedItems((prevSelectedItems) =>
+      prevSelectedItems.includes(id)
+        ? prevSelectedItems.filter((item) => item !== id)
+        : [...prevSelectedItems, id]
+    );
   };
 
   useEffect(() => {
@@ -91,48 +123,96 @@ const Cart = () => {
   }
 
   return (
-    <Container className="cart-container py-5">
+    <Container
+      className="cart-container py-5"
+      style={{ backgroundColor: "#f8f9fa" }}
+    >
       <Row className="justify-content-center">
-        <Col md={10}>
-          <Card className="shadow-lg rounded">
+        <Col xs={12} md={8}>
+          <Card
+            className="shadow-lg rounded"
+            style={{
+              border: "none",
+              borderRadius: "8px",
+              padding: "20px",
+              color: "#333", // إبقاء النص باللون الطبيعي (مثل ملخص الطلب)
+            }}
+          >
             <CardBody>
-              <CardTitle tag="h3" className="text-center mb-4 text-uppercase">
-                <FaShoppingCart className="me-2" />
-                Your Shopping Cart
+              <CardTitle
+                tag="h3"
+                className="text-center mb-4 text-uppercase"
+                style={{ fontWeight: "bold" }}
+              >
+                YOUR BAG ({cart.items.length})
               </CardTitle>
               {cart.items.map((item) => (
                 <div
                   key={item._id}
-                  className="d-flex flex-column flex-md-row align-items-center justify-content-between mb-4 pb-3 border-bottom"
+                  className="d-flex align-items-center justify-content-between mb-4"
+                  style={{
+                    borderBottom: "1px solid #ddd", // تم تعديل اللون ليكون أكثر تباينًا مع السلة
+                    paddingBottom: "15px",
+                    paddingTop: "15px",
+                  }}
                 >
-                  <div className="d-flex align-items-center w-100">
+                  <div
+                    className="d-flex align-items-center"
+                    style={{ flex: 1 }}
+                  >
+                    <div
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        marginRight: "15px",
+                        padding: "10px",
+                        borderRadius: "8px",
+                        border: "1px solid #ddd",
+                        backgroundColor: "#f7f7f7",
+                      }}
+                    >
+                      <input
+                        type="checkbox"
+                        checked={selectedItems.includes(item._id)}
+                        onChange={() => handleSelectItem(item._id)}
+                        style={{
+                          width: "20px",
+                          height: "20px",
+                          color: "#000", // تغيير لون اختيار المنتج إلى اللون الأسود
+                          accentColor: "#000", // لجعل المربع نفسه يظهر باللون الأسود عند التحديد
+                        }}
+                      />
+                    </div>
                     <img
                       src={item.image}
                       alt={item.desc}
                       style={{
-                        width: "120px",
-                        height: "120px",
+                        width: "100px",
+                        height: "100px",
                         objectFit: "cover",
-                        borderRadius: "10px",
-                        marginRight: "20px",
+                        borderRadius: "8px",
                       }}
                     />
-                    <div className="w-100">
-                      <h6
-                        style={{
-                          fontWeight: "bold",
-                          fontSize: "18px",
-                          marginBottom: "10px",
-                        }}
-                      >
-                        {item.desc}
-                      </h6>
+                  </div>
+                  <div className="d-flex flex-column flex-grow-1 ms-3">
+                    <h6
+                      style={{
+                        fontWeight: "bold",
+                        fontSize: "16px",
+                        marginBottom: "5px",
+                      }}
+                    >
+                      {item.desc}
+                    </h6>
+                    <div className="d-flex justify-content-between">
                       <CardText
                         className="text-muted mb-1"
                         style={{ fontSize: "14px" }}
                       >
                         Quantity: {item.quantity}
                       </CardText>
+                    </div>
+                    <div>
                       <CardText
                         className="text-muted mb-1"
                         style={{ fontSize: "14px" }}
@@ -141,73 +221,156 @@ const Cart = () => {
                       </CardText>
                     </div>
                   </div>
-
-                  {/* زر الحذف مع التعديل على مظهره */}
-                  <Button
-                    color="danger"
-                    className="btn-sm rounded-pill shadow mt-3 mt-md-0"
-                    onClick={() => handleDelete(item._id)}
+                  <FaTrashAlt
                     style={{
-                      border: "none",
-                      backgroundColor: "#dc3545",
-                      fontSize: "14px",
-                      padding: "8px 15px",
-                      display: "flex",
-                      alignItems: "center",
+                      fontSize: "18px",
+                      color: "#e74c3c",
+                      cursor: "pointer",
+                      marginLeft: "10px",
+                      transition: "color 0.3s ease, transform 0.2s ease",
                     }}
-                  >
-                    <FaTrashAlt className="me-2" /> Delete
-                  </Button>
+                    onClick={() => handleDelete(item._id)}
+                    onMouseEnter={(e) => (e.target.style.color = "#c0392b")}
+                    onMouseLeave={(e) => (e.target.style.color = "#e74c3c")}
+                    onMouseDown={(e) =>
+                      (e.target.style.transform = "scale(0.9)")
+                    }
+                    onMouseUp={(e) => (e.target.style.transform = "scale(1)")}
+                  />
                 </div>
               ))}
             </CardBody>
-            <div
-              className="py-4"
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                backgroundColor: "#f8f9fa",
-                borderTop: "1px solid #ddd",
-              }}
-            >
-              <h5
+          </Card>
+        </Col>
+        {/* Order Summary Card */}
+        <Col xs={12} md={4}>
+          <Card
+            className="shadow-lg rounded"
+            style={{ border: "none", backgroundColor: "#333", color: "white" }} // نفس خلفية السلة
+          >
+            <CardBody>
+              <CardTitle
+                tag="h4"
+                className="text-center mb-4"
                 style={{
                   fontWeight: "bold",
-
-                  marginBottom: "15px",
-                }}
+                  fontFamily: "Helvetica, Arial, sans-serif",
+                }} // خط نحيل
               >
-                Total Price: {cart.totalPrice.toFixed(2)} OMR
-              </h5>
+                Order Summary
+              </CardTitle>
+              <div className="d-flex justify-content-between mb-2">
+                <CardText
+                  style={{
+                    fontSize: "14px",
+                    color: "#bbb", // لون فاتح
+                    fontFamily: "Helvetica, Arial, sans-serif", // نفس الخط
+                  }}
+                >
+                  <FaBoxOpen className="me-2" />
+                  Total Items:
+                </CardText>
+                <CardText
+                  style={{
+                    fontSize: "14px",
+                    color: "#bbb", // لون فاتح
+                    fontFamily: "Helvetica, Arial, sans-serif", // نفس الخط
+                  }}
+                >
+                  {selectedItems.length}
+                </CardText>
+              </div>
+              <div className="d-flex justify-content-between mb-2">
+                <CardText
+                  style={{
+                    fontSize: "14px",
+                    color: "#bbb", // لون فاتح
+                    fontFamily: "Helvetica, Arial, sans-serif", // نفس الخط
+                  }}
+                >
+                  <FaDollarSign className="me-2" />
+                  Total Price:
+                </CardText>
+                <CardText
+                  style={{
+                    fontSize: "14px",
+                    color: "#bbb", // لون فاتح
+                    fontFamily: "Helvetica, Arial, sans-serif", // نفس الخط
+                  }}
+                >
+                  {getTotalPrice().toFixed(2)} OMR
+                </CardText>
+              </div>
               <Button
-                color="primary"
+                style={{
+                  backgroundColor: "#555", // تغيير اللون عند التمرير
+                  color: "white",
+                  borderRadius: "8px",
+                  fontSize: "16px",
+                  padding: "12px 20px",
+                  transition: "background-color 0.3s",
+                }}
                 size="lg"
-                className="checkout-button rounded-pill shadow-lg"
+                className="checkout-button shadow-lg w-100"
                 onClick={handleCheckout}
+                onMouseEnter={(e) => (e.target.style.backgroundColor = "#444")}
+                onMouseLeave={(e) => (e.target.style.backgroundColor = "#555")}
               >
-                <FaCreditCard className="me-2" />
-                Checkout
+                <FaShoppingBag className="me-2" /> Checkout
               </Button>
-            </div>
+            </CardBody>
           </Card>
         </Col>
       </Row>
 
-      {/* Modal */}
-      <Modal isOpen={modalOpen} toggle={toggleModal} centered>
+      {/* Deletion Confirmation Modal */}
+      <Modal
+        isOpen={deleteModalOpen}
+        toggle={() => setDeleteModalOpen(false)}
+        centered
+      >
         <ModalHeader
-          toggle={toggleModal}
-          className={`text-white ${
-            messageType === "success" ? "bg-success" : "bg-danger"
-          }`}
+          toggle={() => setDeleteModalOpen(false)}
+          style={{
+            backgroundColor: "#fff",
+            color: "#333",
+            border: "none",
+            padding: "15px",
+            fontSize: "18px",
+          }}
         >
-          {messageType === "success" ? "Success" : "Error"}
+          <img
+            src={Logo}
+            alt="Your Logo"
+            style={{ width: "40px", marginRight: "15px" }}
+          />
+          Confirm Deletion
         </ModalHeader>
-        <ModalBody>{message}</ModalBody>
-        <ModalFooter>
-          <Button color="secondary" onClick={toggleModal}>
-            Close
+        <ModalBody
+          style={{
+            textAlign: "center",
+            color: "#555",
+            fontSize: "18px",
+            padding: "20px",
+          }}
+        >
+          Are you sure you want to delete this product?
+        </ModalBody>
+        <ModalFooter style={{ justifyContent: "center", padding: "15px" }}>
+          <Button
+            color="secondary"
+            onClick={() => setDeleteModalOpen(false)}
+            style={{ padding: "10px 20px", fontSize: "16px" }}
+          >
+            Cancel
+          </Button>
+          <Button
+            color="danger"
+            onClick={confirmDelete}
+            style={{ padding: "10px 20px", fontSize: "16px" }}
+          >
+            <FaTrashAlt style={{ marginRight: "8px" }} />
+            Delete
           </Button>
         </ModalFooter>
       </Modal>

@@ -9,6 +9,10 @@ import {
   Col,
   Card,
   CardBody,
+  Modal,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
 } from "reactstrap";
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -23,15 +27,16 @@ import Location from "./Location";
 
 const Profile = () => {
   const user = useSelector((state) => state.users.user);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const [userName, setUserName] = useState(user.name);
-  const [phoneNumber, setphoneNumber] = useState(user.phoneNumber);
+  const [phoneNumber, setPhoneNumber] = useState(user.phoneNumber);
   const [pwd, setPwd] = useState(user.password);
   const [confirmPassword, setConfirmPassword] = useState(user.password);
   const [profilePic, setProfilePic] = useState(user.profilePic);
-
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
+  const [modalOpen, setModalOpen] = useState(false);
+  const [modalMessage, setModalMessage] = useState("");
 
   const {
     register,
@@ -52,7 +57,8 @@ const Profile = () => {
     };
     console.log(userData);
     dispatch(updateUserProfile(userData));
-    alert("Profile Updated.");
+    setModalMessage("Profile Updated successfully!");
+    setModalOpen(true); // Show the modal when the profile is updated
     navigate("/profile");
   };
 
@@ -67,13 +73,17 @@ const Profile = () => {
       navigate("/login");
     }
   }, [user.email, navigate]);
-  const handlelogout = async () => {
-    dispatch(logout());
-    //ensure that the state update from the logout action has been processed before proceeding to the next step.
-    await new Promise((resolve) => setTimeout(resolve, 100));
 
-    navigate("/logout"); //redirect to login page route.
+  const handleLogout = async () => {
+    dispatch(logout());
+    await new Promise((resolve) => setTimeout(resolve, 100));
+    navigate("/logout");
   };
+
+  const handleModalClose = () => {
+    setModalOpen(false); // Close the modal
+  };
+
   return (
     <div className="profile" style={{ color: "#333" }}>
       <Container fluid className="pt-5">
@@ -88,7 +98,7 @@ const Profile = () => {
           <Col md={5}>
             <User userData={user} />
             <br></br>
-            <Location></Location>
+            <Location />
           </Col>
           <Col md={7}>
             <Card
@@ -181,7 +191,7 @@ const Profile = () => {
                       placeholder="Enter your phone number"
                       type="tel"
                       value={phoneNumber}
-                      onChange={(e) => setphoneNumber(e.target.value)}
+                      onChange={(e) => setPhoneNumber(e.target.value)}
                       style={{
                         borderRadius: "10px",
                         border: "1px solid #ddd",
@@ -273,6 +283,45 @@ const Profile = () => {
           </Col>
         </Row>
       </Container>
+
+      {/* Modal for Success Message */}
+      <Modal isOpen={modalOpen} toggle={() => setModalOpen(false)} centered>
+        <ModalHeader
+          toggle={() => setModalOpen(false)}
+          style={{
+            backgroundColor: "#fff",
+            color: "#333",
+            border: "none",
+            display: "flex",
+            alignItems: "center",
+            padding: "15px",
+            fontSize: "18px",
+          }}
+        >
+          Success
+        </ModalHeader>
+
+        <ModalBody
+          style={{
+            textAlign: "center",
+            color: "#555",
+            fontSize: "18px",
+            padding: "20px",
+          }}
+        >
+          {modalMessage}
+        </ModalBody>
+
+        <ModalFooter style={{ justifyContent: "center", padding: "15px" }}>
+          <Button
+            color="secondary"
+            onClick={() => setModalOpen(false)}
+            style={{ padding: "10px 20px", fontSize: "16px" }}
+          >
+            Close
+          </Button>
+        </ModalFooter>
+      </Modal>
     </div>
   );
 };

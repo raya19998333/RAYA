@@ -4,7 +4,6 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import Header from "./component/Header";
 import Home from "./component/Home";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-// Use BrowserRouter instead of Router
 import Products from "./component/Products";
 import About from "./component/About";
 import Footer from "./component/Footer";
@@ -26,49 +25,34 @@ import AdminCartDashboard from "./component/Admin/AdminCarts";
 
 function App() {
   const email = useSelector((state) => state.users.user.email);
+
   return (
-    <div>
+    <div className="app" style={{ margin: "0", padding: "0" }}>
       <Router>
-        <Row>
-          {email ? (
-            <>
-              <Header />
-            </>
-          ) : null}
-        </Row>
-        <Container>
-          <Routes>
-            {" "}
-            <Route path="/login" element={<Login />} />
-            <Route path="/allcarts" element={<AdminCartDashboard />} />
-            <Route path="/manage" element={<Manage />}></Route>
-            <Route path="/" element={<Home />}></Route>
-            <Route path="/cart" element={<Cart />}></Route>
-            <Route path="/products" element={<Products />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/registerUser" element={<Register />} />
-            <Route path="/Liptint" element={<Liptint />} />
-            <Route path="/profile" element={<Profile />} />
-            <Route path="/order/:orderId" element={<Order />} />
-            <Route path="/SharePost" element={<SharePost />}></Route>
-            <Route path="/posts" element={<AdminPostsTable />}></Route>
-            <Route path="/managep" element={<ManageProducts />}></Route>
-            <Route path="/update/:prod_id" element={<UpdateProduct />}></Route>
-          </Routes>
+        <Container fluid>
+          <Row>{email && <Header />}</Row>
+          <Row>
+            <Routes>
+              <Route path="/login" element={<Login />} />
+              <Route path="/allcarts" element={<AdminCartDashboard />} />
+              <Route path="/manage" element={<Manage />} />
+              <Route path="/" element={<Home />} />
+              <Route path="/cart" element={<Cart />} />
+              <Route path="/products" element={<Products />} />
+              <Route path="/about" element={<About />} />
+              <Route path="/registerUser" element={<Register />} />
+              <Route path="/Liptint" element={<Liptint />} />
+              <Route path="/profile" element={<Profile />} />
+              <Route path="/order/:orderId" element={<Order />} />
+              <Route path="/SharePost" element={<SharePost />} />
+              <Route path="/posts" element={<AdminPostsTable />} />
+              <Route path="/managep" element={<ManageProducts />} />
+              <Route path="/update/:prod_id" element={<UpdateProduct />} />
+            </Routes>
+          </Row>
+          <Row>{email && <Footer />}</Row>
         </Container>
       </Router>
-      <br></br>
-      <br></br>
-      <br></br>
-      <br></br>
-      <br></br>
-      <Row>
-        {email ? (
-          <>
-            <Footer />
-          </>
-        ) : null}
-      </Row>
     </div>
   );
 }

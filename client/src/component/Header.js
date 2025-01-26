@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import {
   Navbar,
   NavbarToggler,
@@ -40,11 +40,19 @@ function Header() {
   const cart = useSelector((state) => state.cart);
   const [offcanvasOpen, setOffcanvasOpen] = useState(false);
   const [logoutModal, setLogoutModal] = useState(false);
-  const toggleOffcanvas = () => setOffcanvasOpen(!offcanvasOpen);
-  const toggleLogoutModal = () => setLogoutModal(!logoutModal);
   const location = useLocation();
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  const toggleOffcanvas = useCallback(
+    () => setOffcanvasOpen((prev) => !prev),
+    []
+  );
+  const closeOffcanvas = useCallback(() => setOffcanvasOpen(false), []);
+  const toggleLogoutModal = useCallback(
+    () => setLogoutModal((prev) => !prev),
+    []
+  );
 
   const handleLogout = async () => {
     dispatch(logout());
@@ -60,8 +68,11 @@ function Header() {
     }
   }, [user, navigate, dispatch]);
 
+  const isActive = (path) => (location.pathname === path ? "active" : "");
+
   return (
-    <div>
+    <div style={{ padding: "0", margin: "0" }}>
+      {/* Navbar Component */}
       <Navbar
         light
         className="header"
@@ -80,6 +91,7 @@ function Header() {
         <NavbarToggler onClick={toggleOffcanvas} className="me-2" />
       </Navbar>
 
+      {/* Offcanvas Menu */}
       <Offcanvas
         isOpen={offcanvasOpen}
         toggle={toggleOffcanvas}
@@ -91,132 +103,161 @@ function Header() {
         <OffcanvasBody>
           <Nav vertical className="nav">
             <NavItem
-              className={`nav-item ${
-                location.pathname === "/" ? "active" : ""
-              }`}
+              className={`nav-item ${isActive("/")}`}
+              onClick={closeOffcanvas}
             >
               <Link to="/" className="nav-link">
                 <FaHome className="me-2" /> Home
               </Link>
             </NavItem>
+
+            {/* Admin-specific links */}
             {user?.userType === "admin" && (
               <>
                 <NavItem
-                  className={`nav-item ${
-                    location.pathname === "/Manage" ? "active" : ""
-                  }`}
+                  className={`nav-item ${isActive("/Manage")}`}
+                  onClick={closeOffcanvas}
                 >
                   <Link to="/Manage" className="nav-link">
                     <FaUsersCog className="me-2" /> Manage Users
                   </Link>
                 </NavItem>
                 <NavItem
-                  className={`nav-item ${
-                    location.pathname === "/posts" ? "active" : ""
-                  }`}
+                  className={`nav-item ${isActive("/posts")}`}
+                  onClick={closeOffcanvas}
                 >
                   <Link to="/posts" className="nav-link">
                     <FaCommentDots className="me-2" /> Customer Reviews
                   </Link>
                 </NavItem>
                 <NavItem
-                  className={`nav-item ${
-                    location.pathname === "/allcarts" ? "active" : ""
-                  }`}
+                  className={`nav-item ${isActive("/cart")}`}
+                  onClick={closeOffcanvas}
                 >
-                  <Link to="/allcarts" className="nav-link">
-                    <FaShoppingCart className="me-2" /> Carts {cart.count}
+                  <Link to="/cart" className="nav-link">
+                    <FaShoppingCart className="me-2" /> My Shopping Cart (
+                    {cart.count})
                   </Link>
                 </NavItem>
-                <NavItem className="nav-item">
+
+                <NavItem
+                  className={`nav-item ${isActive("/managep")}`}
+                  onClick={closeOffcanvas}
+                >
                   <Link to="/managep" className="nav-link">
                     <FaPaintBrush className="me-2" /> Manage Products
                   </Link>
                 </NavItem>
               </>
             )}
+
+            {/* Common links */}
             <NavItem
-              className={`nav-item ${
-                location.pathname === "/products" ? "active" : ""
-              }`}
+              className={`nav-item ${isActive("/products")}`}
+              onClick={closeOffcanvas}
             >
               <Link to="/products" className="nav-link">
                 <FaTint className="me-2" /> All Products
               </Link>
             </NavItem>
             <NavItem
-              className={`nav-item ${
-                location.pathname === "/profile" ? "active" : ""
-              }`}
+              className={`nav-item ${isActive("/profile")}`}
+              onClick={closeOffcanvas}
             >
               <Link to="/profile" className="nav-link">
                 <FaUser className="me-2" /> Profile Settings
               </Link>
             </NavItem>
             <NavItem
-              className={`nav-item ${
-                location.pathname === "/cart" ? "active" : ""
-              }`}
+              className={`nav-item ${isActive("/cart")}`}
+              onClick={closeOffcanvas}
             >
               <Link to="/cart" className="nav-link">
                 <FaShoppingCart className="me-2" /> My Shopping Cart
               </Link>
             </NavItem>
             <NavItem
-              className={`nav-item ${
-                location.pathname === "/SharePost" ? "active" : ""
-              }`}
+              className={`nav-item ${isActive("/SharePost")}`}
+              onClick={closeOffcanvas}
             >
               <Link to="/SharePost" className="nav-link">
-                <FontAwesomeIcon icon={faComments} className="me-2" />
-                Share Your Feedback
+                <FontAwesomeIcon icon={faComments} className="me-2" /> Share
+                Your Feedback
               </Link>
             </NavItem>
             <NavItem
-              className={`nav-item ${
-                location.pathname === "/About" ? "active" : ""
-              }`}
+              className={`nav-item ${isActive("/About")}`}
+              onClick={closeOffcanvas}
             >
               <Link to="/About" className="nav-link">
                 <FaInfoCircle className="me-2" /> About Us
               </Link>
             </NavItem>
             <NavItem className="nav-item">
-              <Button
+              <div
                 onClick={toggleLogoutModal}
-                color="dark"
-                className="logout-button w-100 text-start"
+                className="logout-button w-100 text-start d-flex align-items-center"
                 style={{
                   borderRadius: "5px",
                   padding: "10px",
                   marginTop: "20px",
+                  cursor: "pointer",
+                  color: "#fff",
+                  backgroundColor: "#000",
+                  boxShadow: "0 1px 3px rgba(0, 0, 0, 0.1)",
                 }}
               >
                 <FaSignOutAlt className="me-2" /> Log Out
-              </Button>
+              </div>
             </NavItem>
           </Nav>
         </OffcanvasBody>
       </Offcanvas>
 
+      {/* Logout Confirmation Modal */}
       <Modal isOpen={logoutModal} toggle={toggleLogoutModal} centered>
         <ModalHeader
           toggle={toggleLogoutModal}
           style={{
-            backgroundColor: "#000",
-            color: "#fff",
+            backgroundColor: "#fff",
+            color: "#333",
+            border: "none",
+            display: "flex",
+            alignItems: "center",
+            padding: "15px",
+            fontSize: "18px",
           }}
         >
+          <img
+            src={Logo}
+            alt="Your Logo"
+            style={{ width: "40px", marginRight: "15px" }}
+          />
           Confirm Logout
         </ModalHeader>
-        <ModalBody style={{ textAlign: "center", color: "#000" }}>
+        <ModalBody
+          style={{
+            textAlign: "center",
+            color: "#555",
+            fontSize: "18px",
+            padding: "20px",
+          }}
+        >
           Are you sure you want to log out?
         </ModalBody>
-        <ModalFooter>
-          <Button color="secondary" onClick={toggleLogoutModal}>
+        <ModalFooter style={{ justifyContent: "center", padding: "15px" }}>
+          <Button
+            color="secondary"
+            onClick={toggleLogoutModal}
+            style={{ padding: "10px 20px", fontSize: "16px" }}
+          >
             Cancel
           </Button>
-          <Button color="dark" onClick={handleLogout}>
+          <Button
+            color="dark"
+            onClick={handleLogout}
+            style={{ padding: "10px 20px", fontSize: "16px" }}
+          >
             Log Out
           </Button>
         </ModalFooter>
