@@ -34,10 +34,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useNavigate } from "react-router-dom";
 import { faComments } from "@fortawesome/free-solid-svg-icons";
-
+import { persistore } from "../Store/store";
+import { resetStore } from "../Store/store";
 function Header() {
-  const user = useSelector((state) => state.users.user) || {};
-  const cart = useSelector((state) => state.cart);
+  const user = useSelector((state) => state.users.user);
+  const cart = useSelector((state) => state.cart.cart);
   const [offcanvasOpen, setOffcanvasOpen] = useState(false);
   const [logoutModal, setLogoutModal] = useState(false);
   const location = useLocation();
@@ -53,21 +54,20 @@ function Header() {
     () => setLogoutModal((prev) => !prev),
     []
   );
-
   const handleLogout = async () => {
+    //resetStore();
+    persistore.purge();
     dispatch(logout());
     await new Promise((resolve) => setTimeout(resolve, 100));
     navigate("/login");
   };
-
   useEffect(() => {
     if (!user.email) {
       navigate("/login");
     } else {
       dispatch(getCart(user._id));
     }
-  }, [user, navigate, dispatch]);
-
+  }, [user]);
   const isActive = (path) => (location.pathname === path ? "active" : "");
 
   return (
@@ -83,12 +83,99 @@ function Header() {
           width: "100%",
           backgroundColor: "#fff",
           boxShadow: "0 2px 5px rgba(0, 0, 0, 0.1)",
+          padding: "10px 20px",
         }}
       >
-        <NavbarBrand tag={Link} to="/" className="me-auto">
+        {/* Logo centered */}
+        <NavbarBrand
+          tag={Link}
+          to="/"
+          className="mx-auto"
+          style={{
+            position: "absolute",
+            left: "50%",
+            transform: "translateX(-50%)",
+          }}
+        >
           <img src={Logo} alt="Logo" className="logo-img" />
         </NavbarBrand>
+
+        {/* NavbarToggler Icon */}
         <NavbarToggler onClick={toggleOffcanvas} className="me-2" />
+
+        {/* Cart info section */}
+        <div
+          className="cart-info"
+          style={{
+            display: "flex",
+            alignItems: "center",
+            position: "absolute",
+            right: "20px", // Align cart to the right
+          }}
+        >
+          <Link
+            to="/cart"
+            className="nav-link"
+            style={{
+              display: "flex",
+              alignItems: "center",
+              position: "relative",
+            }}
+          >
+            {/* Cart Icon */}
+
+            {/* Price Circle */}
+            <div
+              className="cart-info"
+              style={{
+                display: "flex",
+                alignItems: "center",
+                position: "absolute",
+                right: "20px", // Align cart to the right
+                cursor: "pointer",
+                transition: "all 0.3s ease-in-out",
+              }}
+            >
+              <Link
+                to="/cart"
+                className="nav-link"
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  position: "relative",
+                }}
+              >
+                {/* Cart Icon */}
+                <FaShoppingCart
+                  className="me-2"
+                  style={{ fontSize: "28px", color: "#333" }}
+                />
+
+                {/* Cart Item Count */}
+                <div
+                  style={{
+                    position: "absolute",
+                    top: "-5px",
+                    right: "-10px",
+                    backgroundColor: "#FF5733", // Red for emphasis
+                    color: "#fff",
+                    borderRadius: "90%",
+                    padding: "1px 7px 1px",
+                    fontSize: "13px",
+                  }}
+                >
+                  <div>
+                    {cart?.items?.length ? (
+                      <div>{cart.items.length}</div>
+                    ) : (
+                      <div>0</div>
+                    )}
+                  </div>
+                </div>
+              </Link>
+            </div>
+          </Link>
+        </div>
       </Navbar>
 
       {/* Offcanvas Menu */}
@@ -134,9 +221,8 @@ function Header() {
                   className={`nav-item ${isActive("/cart")}`}
                   onClick={closeOffcanvas}
                 >
-                  <Link to="/cart" className="nav-link">
-                    <FaShoppingCart className="me-2" /> My Shopping Cart (
-                    {cart.count})
+                  <Link to="/allcarts" className="nav-link">
+                    <FaShoppingCart className="me-2" /> Carts ({cart.count})
                   </Link>
                 </NavItem>
 

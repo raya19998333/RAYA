@@ -14,12 +14,13 @@ import {
   Input,
   ModalBody,
 } from "reactstrap";
+import { MdOutlineAddShoppingCart } from "react-icons/md";
+
 import Logo from "../component/Photos/logo.png";
 import { useSelector, useDispatch } from "react-redux";
 import { addToCart } from "../Features/CartSlice";
 import { getProducts } from "../Features/ProductSlice";
 import { useNavigate } from "react-router-dom";
-import { FaShoppingCart } from "react-icons/fa";
 import im from "./Photos/b1.jpg";
 import c11 from "./Photos/c11.jpg";
 const Products = () => {
@@ -318,8 +319,10 @@ const Products = () => {
                   }}
                   disabled={product.stocks === 0}
                 >
-                  <FaShoppingCart style={{ marginRight: "5px" }} />
-                  Add to Cart
+                  <MdOutlineAddShoppingCart
+                    style={{ marginRight: "5px", fontSize: "30px" }}
+                  />{" "}
+                  {/* أيقونة السلة الجديدة */}
                 </Button>
               </CardBody>
             </Card>

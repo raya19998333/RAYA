@@ -18,7 +18,6 @@ import { faCommentDots, faTags } from "@fortawesome/free-solid-svg-icons";
 import { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { savePost } from "../Features/PostSlice";
-import { useNavigate } from "react-router-dom";
 import Logo from "./Photos/logo.png"; // Adjust the path if needed
 import DisplayPosts from "./Posts"; // Import the DisplayPosts component
 
@@ -28,8 +27,6 @@ const SharePosts = () => {
   const [showAlert, setShowAlert] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
   const [modalMessage, setModalMessage] = useState(""); // To hold the dynamic message for Modal
-
-  const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const email = useSelector((state) => state.users.user.email);
@@ -110,7 +107,7 @@ const SharePosts = () => {
           </Row>
 
           {showAlert && (
-            <Alert color="success" style={{ textAlign: "center" }}>
+            <Alert color="success" style={{ textAlign: "center" }} fade={false}>
               Thank you for your feedback! We appreciate your input.
             </Alert>
           )}

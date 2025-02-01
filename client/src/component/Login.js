@@ -28,7 +28,6 @@ const Login = () => {
   const isError = useSelector((state) => state.users.isError);
 
   const handleLogin = (e) => {
-    e.preventDefault(); // منع إعادة تحميل الصفحة عند إرسال النموذج
     const userData = {
       email: email,
       password: password,
@@ -90,9 +89,7 @@ const Login = () => {
               Login Now
             </Button>
           </Form>
-          <p className="forgot-password">
-            <a href="/forgot-password">Forgot your password?</a>
-          </p>
+          <p className="forgot-password">Forgot your password?</p>
           <p className="create-account">
             New user? <Link to="/registerUser">Create account</Link>
           </p>

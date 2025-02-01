@@ -118,9 +118,6 @@ const Register = () => {
           </p>
           {/* Modal for success or error messages */}
           <Modal isOpen={modal} toggle={toggle}>
-            <ModalHeader toggle={toggle}>
-              {alertType === "success" ? "Success!" : "Error"}
-            </ModalHeader>
             <ModalBody>{alertMessage}</ModalBody>
             <ModalFooter>
               <Button color="primary" onClick={toggle}>

@@ -80,39 +80,27 @@ app.post("/registerUser", async (req, res) => {
 });
 
 //login
-
 app.post("/login", async (req, res) => {
   try {
-    const { email, password } = req.body; //using destructuring
-
-    //search the user
-
-    const user = await UserModel.findOne({ email: email });
-
-    //if not found
+    const { email, password } = req.body;
+    const user = await UserModel.findOne({ email });
 
     if (!user) {
-      return res.status(500).json({ error: "User not found." });
+      return res.status(404).json({ error: "User not found." });
     }
-
-    console.log(user);
 
     const passwordMatch = await bcrypt.compare(password, user.password);
-
     if (!passwordMatch) {
-      return res.status(401).json({ error: "Authentication failed" });
+      return res.status(401).json({ error: "Invalid credentials" });
     }
-
-    //if everything is ok, send the user and message
 
     res.status(200).json({ user, message: "Success." });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    res.status(500).json({ error: "Server error. Please try again." });
   }
 });
 
 //POST API-logout
-
 app.post("/logout", async (req, res) => {
   res.status(200).json({ message: "Logged out successfully" });
 });

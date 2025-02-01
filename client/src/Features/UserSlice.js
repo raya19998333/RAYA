@@ -28,46 +28,24 @@ export const registerUser = createAsyncThunk(
     }
   }
 );
-export const login = createAsyncThunk("users/login", async (userData) => {
-  try {
-    const response = await axios.post(`${ENV.SERVER_URL}/login`, {
-      email: userData.email,
-      password: userData.password,
-    });
-    const user = response.data.user;
-    console.log(response);
-
-    return user;
-  } catch (error) {
-    //handle the error
-
-    const errorMessage = "Invalid credentials";
-
-    alert(errorMessage);
-
-    throw new Error(errorMessage);
-  }
-});
-export const logout = createAsyncThunk(
-  "/users/logout",
-  async (_, { rejectWithValue }) => {
+export const login = createAsyncThunk(
+  "users/login",
+  async (userData, { rejectWithValue }) => {
     try {
-      const response = await axios.post(`${ENV.SERVER_URL}/logout`);
-
-      if (response.status === 200) {
-        return response.data; // إرجاع بيانات الاستجابة عند النجاح (إن وجدت)
-      } else {
-        return rejectWithValue("Failed to logout"); // إرجاع رسالة خطأ إذا لم تكن الاستجابة 200
-      }
+      const response = await axios.post(`${ENV.SERVER_URL}/login`, userData);
+      console.log(response);
+      return response.data.user;
     } catch (error) {
-      console.error("Error logging out", error);
-      // إرجاع تفاصيل الخطأ
-      return rejectWithValue(
-        error.response ? error.response.data : error.message
-      );
+      return rejectWithValue("Invalid credentials");
     }
   }
 );
+export const logout = createAsyncThunk("/users/logout", async () => {
+  try {
+    // Send a request to your server to log the user out
+    const response = await axios.post(`${ENV.SERVER_URL}/logout`);
+  } catch (error) {}
+});
 
 export const updateUserProfile = createAsyncThunk(
   "user/updateUserProfile", // Action type string for Redux
@@ -119,9 +97,9 @@ export const userSlice = createSlice({
       //create a new array with the value that excludes the user with the email value from the action payload, and assign the new array to the state.
       state.value = state.value.filter((user) => user.email !== action.payload);
     },
+
     updateUser: (state, action) => {
-      state.value.map((user) => {
-        //iterate the  array and compare the email with the email from the payload
+      state.value.forEach((user) => {
         if (user.email === action.payload.email) {
           user.name = action.payload.name;
           user.phoneNumber = action.payload.phoneNumber;
@@ -171,8 +149,7 @@ export const userSlice = createSlice({
       })
 
       .addCase(logout.fulfilled, (state) => {
-        // Clear user data or perform additional cleanup if needed
-        state.user = {};
+        state.user = {}; // reset user state
         state.isLoading = false;
         state.isSuccess = false;
       })

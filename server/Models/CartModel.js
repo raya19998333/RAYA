@@ -40,6 +40,7 @@ const CartSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "User", // Assuming there is a User model
     required: true,
+    type: String,
   },
   items: [CartItemSchema],
   totalPrice: {
