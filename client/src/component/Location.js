@@ -47,7 +47,7 @@ const Location = () => {
   }, [ip]);
 
   return (
-    <div className="location-card">
+    <div className="user-card">
       <h3 className="location-title">Location Information</h3>
       {ip ? (
         <div className="location-details">

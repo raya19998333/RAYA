@@ -14,13 +14,12 @@ import {
   Input,
   ModalBody,
 } from "reactstrap";
-import { MdOutlineAddShoppingCart } from "react-icons/md";
-
 import Logo from "../component/Photos/logo.png";
 import { useSelector, useDispatch } from "react-redux";
 import { addToCart } from "../Features/CartSlice";
 import { getProducts } from "../Features/ProductSlice";
 import { useNavigate } from "react-router-dom";
+import { FaShoppingCart } from "react-icons/fa";
 import im from "./Photos/b1.jpg";
 import c11 from "./Photos/c11.jpg";
 const Products = () => {
@@ -303,26 +302,40 @@ const Products = () => {
                 )}
 
                 <Button
-                  color="dark"
                   onClick={() => handleAddToCart(product._id)}
                   style={{
                     fontSize: "16px",
-                    backgroundColor: "#333",
-                    borderColor: "#333",
+                    backgroundColor: "transparent", // خلفية شفافة
+                    borderColor: "#000", // لون الإطار أسود
+                    borderWidth: "1px", // سمك الإطار
+                    borderStyle: "solid", // تأكيد نمط الإطار
                     borderRadius: "5px",
                     boxShadow: "none",
-                    color: "#fff",
+                    color: "#000", // النص باللون الأسود
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
                     width: "100%",
+                    transition: "background-color 0.3s ease, color 0.3s ease", // تأثير انتقال سلس
+                  }}
+                  onMouseEnter={(e) => {
+                    e.target.style.backgroundColor = "#000"; // عند مرور الفأرة يصبح الخلفية سوداء
+                    e.target.style.color = "#fff"; // النص يصبح أبيض
+                  }}
+                  onMouseLeave={(e) => {
+                    e.target.style.backgroundColor = "transparent"; // عند خروج الفأرة يعود الخلفية إلى الشفافية
+                    e.target.style.color = "#000"; // النص يعود إلى اللون الأسود
+                  }}
+                  onMouseDown={(e) => {
+                    e.target.style.backgroundColor = "#333"; // عند الضغط يصبح الخلفية أكثر قتامة
+                  }}
+                  onMouseUp={(e) => {
+                    e.target.style.backgroundColor = "#000"; // عند رفع الضغط، يعود الخلفية إلى الأسود
                   }}
                   disabled={product.stocks === 0}
                 >
-                  <MdOutlineAddShoppingCart
-                    style={{ marginRight: "5px", fontSize: "30px" }}
-                  />{" "}
-                  {/* أيقونة السلة الجديدة */}
+                  <FaShoppingCart style={{ marginRight: "5px" }} />
+                  Add to Cart
                 </Button>
               </CardBody>
             </Card>

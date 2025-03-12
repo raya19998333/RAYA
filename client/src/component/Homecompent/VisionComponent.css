@@ -1,0 +1,96 @@
+/* VisionCards.css */
+.vision-section {
+  text-align: center;
+  margin-top: 50px;
+  background: linear-gradient(to bottom, #f8f8f8, #e0e0e0);
+  padding: 50px 20px;
+  border-radius: 10px;
+}
+
+.section-title {
+  font-weight: 700;
+  color: #444;
+  margin-bottom: 30px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  font-family: 'Roboto', sans-serif;
+  font-size: 2rem;
+  animation: fadeIn 1s ease-in-out;
+}
+
+.cards-container {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  flex-wrap: wrap;
+  padding: 20px;
+  max-width: 1200px;
+  margin: auto;
+}
+
+.card2 {
+  background: #222;
+  color: white;
+  border-radius: 15px;
+  padding: 30px;
+  width: 300px;
+  text-align: center;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+  transition: transform 0.3s ease, box-shadow 0.3s ease, opacity 0.3s ease;
+  cursor: pointer;
+  opacity: 0.95;
+  position: relative;
+  overflow: hidden;
+}
+
+.card2:hover {
+  transform: translateY(-10px) scale(1.05);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+  opacity: 1;
+}
+
+.card-icon {
+  font-size: 3rem;
+  margin-bottom: 15px;
+  transition: transform 0.3s ease;
+  color: #dfdfdf;
+}
+
+.card2:hover .card-icon {
+  transform: rotate(15deg);
+}
+
+h4 {
+  font-size: 1.5rem;
+  margin-bottom: 10px;
+  font-weight: 700;
+  font-family: 'Roboto', sans-serif;
+  text-transform: uppercase;
+  color: #989898;
+}
+
+p {
+  font-size: 1.1rem;
+  line-height: 1.6;
+  font-family: 'Open Sans', sans-serif;
+  letter-spacing: 0.5px;
+  color: #ddd;
+  animation: fadeInUp 1s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 768px) {
+  .cards-container {
+      flex-direction: column;
+      align-items: center;
+  }
+}

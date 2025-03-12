@@ -103,8 +103,13 @@ const Profile = () => {
           <Col md={7}>
             <Card
               className="shadow-lg border-light rounded p-4"
-              style={{ backgroundColor: "#fff" }}
+              style={{
+                background: "linear-gradient(145deg, #ffffff, #e6e6e6)",
+                borderRadius: "15px",
+              }}
             >
+              {/* Card content */}
+
               <CardBody>
                 <h4
                   className="text-center  display-6"

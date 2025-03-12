@@ -222,7 +222,7 @@ function Header() {
                   onClick={closeOffcanvas}
                 >
                   <Link to="/allcarts" className="nav-link">
-                    <FaShoppingCart className="me-2" /> Carts ({cart.count})
+                    <FaShoppingCart className="me-2" /> Carts
                   </Link>
                 </NavItem>
 
